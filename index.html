@@ -3,7 +3,6 @@
 <head>
     <title>For My Sweetheart 💖</title>
     <style>
-        /* Previous styles remain the same */
         body {
             background: linear-gradient(135deg, #ffb3ba, #ffdfba);
             height: 100vh;
@@ -59,9 +58,33 @@
             color: white;
             position: absolute;
             transition: all 0.5s ease;
+            left: 50%; /* Initial position */
         }
 
-        /* Rest of previous styles remain */
+        #message {
+            display: none;
+            font-size: 2rem;
+            color: #ff69b4;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .hearts {
+            position: fixed;
+            top: -20px;
+            animation: fall 3s linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -71,7 +94,7 @@
             <button id="yesBtn" onclick="showMessage()">YES! 🥰</button>
             <button id="noBtn" onmouseover="moveNoButton(event)">NO 🙈</button>
         </div>
-        <div id="message" class="message">YAY! I love you to the moon and back! 💞🌙</div>
+        <div id="message">YAY! I love you to the moon and back! 💞🌙</div>
     </div>
 
     <script>
@@ -80,40 +103,42 @@
             const yesBtn = document.getElementById('yesBtn');
             const container = document.querySelector('.buttons');
             const containerRect = container.getBoundingClientRect();
-            
-            // Calculate escape direction (opposite of mouse movement)
-            const mouseX = event.clientX - containerRect.left;
-            const mouseY = event.clientY - containerRect.top;
-            
-            // Calculate escape position (at least 150px from mouse)
-            let newX = mouseX < containerRect.width/2 ? 
-                Math.random() * containerRect.width/2 + containerRect.width/2 :
-                Math.random() * containerRect.width/2;
-                
-            let newY = mouseY < containerRect.height/2 ? 
-                Math.random() * containerRect.height/2 + containerRect.height/2 :
-                Math.random() * containerRect.height/2;
 
-            // Ensure minimum distance from YES button
-            const yesRect = yesBtn.getBoundingClientRect();
-            const padding = 30; // Minimum space between buttons
-            
-            // Check and adjust position if too close to YES button
-            if (Math.abs(newX - yesRect.left) < padding || 
-                Math.abs(newY - yesRect.top) < padding) {
-                newX = containerRect.width - noBtn.offsetWidth - 10;
-                newY = containerRect.height - noBtn.offsetHeight - 10;
-            }
-
-            // Ensure stays within container
-            newX = Math.max(0, Math.min(newX, containerRect.width - noBtn.offsetWidth));
-            newY = Math.max(0, Math.min(newY, containerRect.height - noBtn.offsetHeight));
+            // Calculate escape direction
+            let newX, newY;
+            do {
+                newX = Math.random() * (containerRect.width - noBtn.offsetWidth);
+                newY = Math.random() * (containerRect.height - noBtn.offsetHeight);
+            } while (
+                // Ensure minimum distance from YES button
+                Math.abs(newX - yesBtn.offsetLeft) < 100 || 
+                Math.abs(newY - yesBtn.offsetTop) < 50
+            );
 
             noBtn.style.left = `${newX}px`;
             noBtn.style.top = `${newY}px`;
         }
 
-        // Previous showMessage and createHeart functions remain
+        function showMessage() {
+            document.getElementById('message').style.display = 'block';
+            document.querySelector('.buttons').style.display = 'none';
+            
+            // Create falling hearts
+            for (let i = 0; i < 50; i++) {
+                createHeart(i);
+            }
+        }
+
+        function createHeart(i) {
+            const heart = document.createElement('div');
+            heart.className = 'hearts';
+            heart.innerHTML = '💖';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDelay = i * 0.1 + 's';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 5000);
+        }
     </script>
 </body>
 </html>
