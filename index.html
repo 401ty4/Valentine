@@ -11,14 +11,14 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: pink;
+            background-color: #ffccdd;
             font-family: 'Comic Sans MS', cursive, sans-serif;
             text-align: center;
         }
         .container {
             position: relative;
-            padding: 20px;
             background: white;
+            padding: 20px;
             border-radius: 20px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         }
@@ -27,9 +27,10 @@
         }
         .buttons {
             margin-top: 20px;
+            position: relative;
         }
         button {
-            padding: 10px 20px;
+            padding: 12px 25px;
             font-size: 20px;
             border: none;
             cursor: pointer;
@@ -42,7 +43,9 @@
         }
         #no {
             background-color: #ccc;
+            color: black;
             position: absolute;
+            left: 120px;
         }
     </style>
 </head>
@@ -54,23 +57,12 @@
             <button id="no">No 💔</button>
         </div>
     </div>
+
     <script>
         const noButton = document.getElementById("no");
         const yesButton = document.getElementById("yes");
         const container = document.querySelector(".container");
 
         noButton.addEventListener("mouseover", function() {
-            const maxX = window.innerWidth - noButton.clientWidth - 20;
-            const maxY = window.innerHeight - noButton.clientHeight - 20;
-            const randomX = Math.random() * maxX;
-            const randomY = Math.random() * maxY;
-            noButton.style.left = `${randomX}px`;
-            noButton.style.top = `${randomY}px`;
-        });
-
-        yesButton.addEventListener("click", function() {
-            container.innerHTML = '<h1>Yay! 💖 I knew you'd say yes! 🥰</h1>';
-        });
-    </script>
-</body>
-</html>
+            let maxX = window.innerWidth - noButton.clientWidth - 50;
+            let maxY = window.innerHeight - noButton.clie
