@@ -77,10 +77,10 @@
             let noButtonClicks = 0;
 
             function moveButton() {
-                let maxX = window.innerWidth - noButton.clientWidth - 20;
-                let maxY = window.innerHeight - noButton.clientHeight - 20;
-                let randomX = Math.max(10, Math.random() * maxX);
-                let randomY = Math.max(10, Math.random() * maxY);
+                let maxX = window.innerWidth - noButton.clientWidth - 50;
+                let maxY = window.innerHeight - noButton.clientHeight - 50;
+                let randomX = Math.max(10, Math.min(Math.random() * maxX, maxX));
+                let randomY = Math.max(10, Math.min(Math.random() * maxY, maxY));
                 
                 noButton.style.left = `${randomX}px`;
                 noButton.style.top = `${randomY}px`;
@@ -94,6 +94,9 @@
 
             noButton.addEventListener("mouseover", moveButton);
             noButton.addEventListener("touchstart", moveButton);
+            noButton.addEventListener("click", function() {
+                window.location.href = "oh_no.html";
+            });
 
             yesButton.addEventListener("click", function() {
                 container.innerHTML = '<h1>Yay! 💖 I knew you\'d say yes! 🥰</h1>';
@@ -102,3 +105,4 @@
     </script>
 </body>
 </html>
+
