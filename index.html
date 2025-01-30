@@ -14,7 +14,6 @@
             background-color: #ffccdd;
             font-family: 'Comic Sans MS', cursive, sans-serif;
             text-align: center;
-            overflow: hidden;
             margin: 0;
         }
         .container {
@@ -26,10 +25,13 @@
         }
         h1 {
             color: red;
+            margin: 0 0 20px 0;
         }
         .buttons {
             margin-top: 20px;
-            position: relative;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
         }
         button {
             padding: 12px 25px;
@@ -42,21 +44,12 @@
         #yes {
             background-color: #ff4d6d;
             color: white;
-            position: relative;
         }
         #no {
             background-color: #ccc;
             color: black;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        @keyframes jiggle {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            50% { transform: translateX(5px); }
-            75% { transform: translateX(-5px); }
-            100% { transform: translateX(0); }
+            position: fixed;
+            transition: left 0.3s, top 0.3s;
         }
     </style>
 </head>
@@ -70,39 +63,49 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const noButton = document.getElementById("no");
-            const yesButton = document.getElementById("yes");
-            const container = document.querySelector(".container");
-            let noButtonClicks = 0;
+        const noButton = document.getElementById("no");
+        const yesButton = document.getElementById("yes");
+        const container = document.querySelector(".container");
 
-            function moveButton() {
-                let maxX = window.innerWidth - noButton.clientWidth - 50;
-                let maxY = window.innerHeight - noButton.clientHeight - 50;
-                let randomX = Math.max(10, Math.min(Math.random() * maxX, maxX));
-                let randomY = Math.max(10, Math.min(Math.random() * maxY, maxY));
-                
-                noButton.style.left = `${randomX}px`;
-                noButton.style.top = `${randomY}px`;
-                
-                noButtonClicks++;
-                if (noButtonClicks > 1) {
-                    yesButton.style.animation = "jiggle 0.5s ease-in-out 3";
-                    setTimeout(() => { yesButton.style.animation = "none"; }, 1500);
-                }
-            }
+        // Set initial position for 'No' button
+        function setInitialPosition() {
+            const yesRect = yesButton.getBoundingClientRect();
+            noButton.style.left = `${yesRect.right + 20}px`;
+            noButton.style.top = `${yesRect.top}px`;
+        }
+        setInitialPosition();
 
-            noButton.addEventListener("mouseover", moveButton);
-            noButton.addEventListener("touchstart", moveButton);
-            noButton.addEventListener("click", function() {
-                window.location.href = "oh_no.html";
-            });
+        noButton.addEventListener("mouseover", function(e) {
+            const buttonWidth = noButton.offsetWidth;
+            const buttonHeight = noButton.offsetHeight;
+            const minDistance = 50; // Minimum distance from cursor
+            
+            const maxX = window.innerWidth - buttonWidth - 20;
+            const maxY = window.innerHeight - buttonHeight - 20;
 
-            yesButton.addEventListener("click", function() {
-                container.innerHTML = '<h1>Yay! 💖 I knew you\'d say yes! 🥰</h1>';
-            });
+            let newX, newY;
+            let attempts = 0;
+            do {
+                newX = Math.random() * maxX;
+                newY = Math.random() * maxY;
+                const distance = Math.hypot(newX - e.clientX, newY - e.clientY);
+                if (distance > minDistance || attempts++ > 100) break;
+            } while (true);
+
+            // Ensure button stays within viewport
+            newX = Math.max(20, Math.min(newX, maxX));
+            newY = Math.max(20, Math.min(newY, maxY));
+
+            noButton.style.left = `${newX}px`;
+            noButton.style.top = `${newY}px`;
         });
+
+        yesButton.addEventListener("click", function() {
+            container.innerHTML = '<h1>Yay! 💖 I knew you\'d say yes! 🥰</h1>';
+        });
+
+        // Update initial position on window resize
+        window.addEventListener('resize', setInitialPosition);
     </script>
 </body>
 </html>
-
