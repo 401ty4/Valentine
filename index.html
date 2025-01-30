@@ -1,90 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Be My Valentine?</title>
+    <title>For My Sweetheart 💖</title>
     <style>
         body {
+            background: linear-gradient(135deg, #ffb3ba, #ffdfba);
+            height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #ffccdd;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            text-align: center;
-            overflow: hidden;
             margin: 0;
+            font-family: 'Comic Sans MS', cursive;
         }
+
         .container {
-            position: relative;
             background: white;
-            padding: 20px;
+            padding: 2rem;
             border-radius: 20px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+            text-align: center;
+            max-width: 400px;
         }
+
         h1 {
-            color: red;
+            color: #ff69b4;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
         }
+
         .buttons {
-            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
             position: relative;
+            min-height: 60px;
         }
+
         button {
-            padding: 12px 25px;
-            font-size: 20px;
+            padding: 10px 30px;
             border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
             cursor: pointer;
-            border-radius: 10px;
-            transition: 0.3s;
+            transition: transform 0.3s ease;
+            font-family: 'Comic Sans MS', cursive;
         }
-        #yes {
-            background-color: #ff4d6d;
+
+        #yesBtn {
+            background: #ff69b4;
             color: white;
         }
-        #no {
-            background-color: #ccc;
-            color: black;
+
+        #noBtn {
+            background: #87cefa;
+            color: white;
             position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+        }
+
+        #yesBtn:hover {
+            transform: scale(1.1);
+            background: #ff1493;
+        }
+
+        .hearts {
+            position: fixed;
+            top: -20px;
+            animation: fall 3s linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        .message {
+            display: none;
+            font-size: 2rem;
+            color: #ff69b4;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Will you be my Valentine? 💖</h1>
+        <h1>My Dearest, will you be my forever love? 💘</h1>
         <div class="buttons">
-            <button id="yes">Yes 💘</button>
-            <button id="no">No 💔</button>
+            <button id="yesBtn" onclick="showMessage()">YES! 🥰</button>
+            <button id="noBtn" onmouseover="moveNoButton()">NO 🙈</button>
         </div>
+        <div id="message" class="message">YAY! I love you to the moon and back! 💞🌙</div>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const noButton = document.getElementById("no");
-            const yesButton = document.getElementById("yes");
-            const container = document.querySelector(".container");
+        function moveNoButton() {
+            const noBtn = document.getElementById('noBtn');
+            const container = document.querySelector('.buttons');
+            const containerRect = container.getBoundingClientRect();
+            
+            // Calculate new random position within container
+            const newX = Math.random() * (containerRect.width - noBtn.offsetWidth);
+            const newY = Math.random() * (containerRect.height - noBtn.offsetHeight);
+            
+            noBtn.style.left = `${newX}px`;
+            noBtn.style.top = `${newY}px`;
+        }
 
-            function moveButton() {
-                let maxX = window.innerWidth - noButton.clientWidth - 50;
-                let maxY = window.innerHeight - noButton.clientHeight - 50;
-                let randomX = Math.random() * maxX;
-                let randomY = Math.random() * maxY;
-                
-                noButton.style.position = "absolute";
-                noButton.style.left = `${randomX}px`;
-                noButton.style.top = `${randomY}px`;
+        function showMessage() {
+            document.getElementById('message').style.display = 'block';
+            document.querySelector('.buttons').style.display = 'none';
+            
+            // Create falling hearts
+            for (let i = 0; i < 50; i++) {
+                createHeart(i);
             }
+        }
 
-            noButton.addEventListener("mouseover", moveButton);
-            noButton.addEventListener("touchstart", moveButton);
-
-            yesButton.addEventListener("click", function() {
-                container.innerHTML = '<h1>Yay! 💖 I knew you\'d say yes! 🥰</h1>';
-            });
-        });
+        function createHeart(i) {
+            const heart = document.createElement('div');
+            heart.className = 'hearts';
+            heart.innerHTML = '💖';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDelay = i * 0.1 + 's';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 5000);
+        }
     </script>
 </body>
 </html>
